@@ -1,0 +1,57 @@
+Notes on  immutability:
+    Immutable objects can be in exactly one state, the state
+    in which it was created. If you make sure that all
+    constructors establish class invariants, then it
+    is guaranteed that these invariants will remain true for
+    all time, with no further effort on your part or on the
+    part of the programmer who uses the class. Mutable objects,
+    on the other hand, can have arbitrarily complex state pieces.
+    If the documentation does not provide a precise description
+    of the state transitions performed by mutator methods, it can
+    be difficult or impossible to use a mutable class reliably.
+
+    Immutable objects are inherently thread-safe; they require
+    no synchronization. They cannot be corrupted by multiple threads
+    accessing them concurrently. This is far and away the easiest
+    approach to achieving thread safety. No thread can ever observe
+    any effect of another thread on an immutable object.
+    Therefore, immutable objects can be shared freely.
+
+    Immutable classes should take advantage of this by encouraging
+    clients to reuse existing instances wherever possible.
+    One easy way to do this is to provide public static final
+    constants for frequently used values. For example, the
+    Complex class might provide public static final constants
+    for frequently used values. For example, the Complex class
+    might provide these constants:
+        public static final Complex ZERO = new Complex(0, 0);
+        public static final Complex ONE = new Complex(1, 0);
+        public static final Complex I = new Complex(0, 1);
+
+        Translation: If you created a Complex class, you can
+        now have these constants for 0, 1, and I and you would
+        never need to say new Complex(0, 0), new Complex(1, 0),
+        or new Complex(0, 1) again since you could always reference
+        these constants.
+
+    An immutable class can provide static factories that
+    cache frequently requested instances to avoid creating
+    new instances when existing ones would do. All the boxed
+    primitive classes and BigInteger do this. Using such static
+    factories causes clients to share instances instead of creating
+    new ones, reducing memory footprint and garbage collection costs.
+    Opting for static functions in place of public constructors when
+    designing a new class gives you the flexibility to add caching
+    later, without modifying clients.
+
+        Further reading notes below:
+
+    A consequence of the fact that immutable objects can be shared
+    freely is that you never have to make defensive copies. In fact,
+    you never have to make any copies at all because the copies
+    would be forever equivalent to the originals. Therefore, you
+    need not and should not provide a clone method or copy
+    constructor on an immutable class. This was not well understood
+    in the early days of the Java platform, so the String class does
+    have a copy constructor, but it should rarely, if ever, be used.
+
